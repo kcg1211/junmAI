@@ -9,7 +9,6 @@ import json
 load_dotenv()
 
 # --- CONFIGURATION ---
-# BASE_API_URL = "https://api.sakestreet.com/v1/media"
 SOURCE_BASE_API_URL = os.getenv('WS_SOURCE1_BASE_API_URL')
 SOURCE_URL=os.getenv('WS_SOURCE1_URL')
 HEADERS = {
@@ -66,8 +65,6 @@ def scrape_full_text(url):
         response = requests.get(url, headers=HEADERS, timeout=10)
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Sake Street puts main content in <article> or specific content divs
-        # We target paragraphs to keep the text clean
         article_content = soup.find('div', class_ = 'mediaRootEn-0-2-28 mediaRoot-0-2-27')
         paragraphs = article_content.find_all('p')
 
