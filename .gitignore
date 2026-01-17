@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
 
 # Virtual Environments
 .venv/
