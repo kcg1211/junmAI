@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Project Specific Data/Scraping
+# These appear to be local data files or sources
+source1_data.json
+sources.json
+
+# Tooling / Locks
+# Note: Usually you WANT to commit uv.lock if you are using 'uv',
+# but if you want to keep the repo strictly for source code:
+# uv.lock
+
+# Environment variables / Secrets
+.env
+.env.local
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
