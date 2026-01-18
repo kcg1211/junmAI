@@ -17,7 +17,9 @@ env/
 # Project Specific Data/Scraping
 # These appear to be local data files or sources
 source1_data.json
-sources.json
+source1_data.jsonl
+scraper_sources.json
+sake_glossary.json
 
 # Tooling / Locks
 # Note: Usually you WANT to commit uv.lock if you are using 'uv',

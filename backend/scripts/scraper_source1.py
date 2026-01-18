@@ -3,14 +3,15 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import time
-import csv
 import json
+# import csv
 
 load_dotenv()
 
 # --- CONFIGURATION ---
 SOURCE_BASE_API_URL = os.getenv('WS_SOURCE1_BASE_API_URL')
-SOURCE_URL=os.getenv('WS_SOURCE1_URL')
+SOURCE_URL = os.getenv('WS_SOURCE1_URL')
+OUTPUT_FILE = 'source1_data.jsonl'
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
@@ -86,25 +87,58 @@ if __name__ == "__main__":
     article_list = get_all_article_metadata()
     # print(article_list)
     print(f"Found {len(article_list)} unique articles.\n")
+    
+    # 2. Check what have been already scraped
+    processed_urls = set()
+    if os.path.exists(OUTPUT_FILE):
+        with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    existing_article = json.loads(line)
+                    processed_urls.add(existing_article['url'])
+                except json.JSONDecodeError:
+                    continue
+        print(f"Resuming: {len(processed_urls)} articles already processed. Skipping them.")
 
-    # 2. Scrape full content for each link
+    # 3. Scrape full content for each link
     print("Starting full-text extraction (this will take a while)...")
-    for index, article in enumerate(article_list):
-        print(f"[{index+1}/{len(article_list)}] Scraping: {article['title']}")
-        
-        article['full_text'] = scrape_full_text(article['url'])
-        
-        # Crucial: Sleep to avoid being blocked
-        time.sleep(1.5)
+    
+    try:
+        with open(OUTPUT_FILE, 'a', encoding='utf-8') as f:
+            for index, article in enumerate(article_list):
+                url = article['url']
+                
+                # --- THE SKIP LOGIC ---
+                if url in processed_urls:
+                    continue
+                
+                print(f"[{index+1}/{len(article_list)}] Scraping: {article['title']}")
+                
+                article['full_text'] = scrape_full_text(article['url'])
+                
+                # Write this specific article to a new line in the file
+                json_record = json.dumps(article, ensure_ascii=False)
+                f.write(json_record + "\n")
+                
+                # Flush ensures the data is written to disk immediately
+                f.flush()
+                
+                # Crucial: Sleep to avoid being blocked
+                time.sleep(1.5)
+                
+        print(f"\nSuccess! Data saved to {OUTPUT_FILE}")     
+    except IOError as e:
+        print(f"Error writing to file: {e}")  
+            
 
-    # 3. Save to JSON
-    output_filename = 'source1_data.json'
-    with open(output_filename, 'w', encoding='utf-8') as f:
-        # ensure_ascii=False keeps Japanese characters readable
-        # indent=4 makes the file human-readable
-        json.dump(article_list, f, ensure_ascii=False, indent=4)
+    # # 3. Save to JSON
+    # output_filename = 'source1_data.json'
+    # with open(output_filename, 'w', encoding='utf-8') as f:
+    #     # ensure_ascii=False keeps Japanese characters readable
+    #     # indent=4 makes the file human-readable
+    #     json.dump(article_list, f, ensure_ascii=False, indent=4)
 
-    print(f"\nSuccess! Data saved to {output_filename}")
+    # print(f"\nSuccess! Data saved to {output_filename}") 
     
     # # 3. Save to CSV
     # keys = article_list[0].keys()
