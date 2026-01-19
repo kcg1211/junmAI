@@ -7,7 +7,7 @@ import json
 load_dotenv()
 
 SOURCE_URL = os.getenv('WS_SOURCE2_URL')
-OUTPUT_FILE = 'source2_data.jsonl'
+OUTPUT_FILE = 'source2_data.json'
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
@@ -43,7 +43,7 @@ for item in items:
 
 # Export to JSON file
 try:
-    with open('sake_glossary.json', 'w', encoding='utf-8') as f:
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(glossary_data, f, ensure_ascii=False, indent=4)
     print(f"Successfully saved {len(glossary_data)} items to sake_glossary.json")
 except IOError as e:
