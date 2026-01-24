@@ -19,7 +19,8 @@ env/
 source1_data.json
 source1_data.jsonl
 scraper_sources.json
-sake_glossary.json
+source2_data.json
+source3_data.jsonl
 
 # Tooling / Locks
 # Note: Usually you WANT to commit uv.lock if you are using 'uv',

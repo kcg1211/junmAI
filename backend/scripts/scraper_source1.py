@@ -16,14 +16,16 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }
 
+# TODO: refactoring get_metadata and get_full_text into classes
+
 def get_all_article_metadata():
     """Step 1: Get URLs and Titles from the API."""
     articles = []
     seen_slugs = set()
     page = 0
     
-    # while:
-    for _ in range(1):
+    while True:
+    # for _ in range(1):
         print(f"Fetching API page {page}...")
         params = {"base_offset": 9, "page": page, "size": 8, "lang": "en-US"}
         
@@ -80,71 +82,74 @@ def scrape_full_text(url):
         print(f"Error scraping content for {url}: {e}")
         return ""
 
-# --- MAIN EXECUTION ---
-if __name__ == "__main__":
-    # 1. Collect all links
-    print("Starting metadata collection...")
-    article_list = get_all_article_metadata()
-    # print(article_list)
-    print(f"Found {len(article_list)} unique articles.\n")
-    
-    # 2. Check what have been already scraped
-    processed_urls = set()
-    if os.path.exists(OUTPUT_FILE):
-        with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
-            for line in f:
-                try:
-                    existing_article = json.loads(line)
-                    processed_urls.add(existing_article['url'])
-                except json.JSONDecodeError:
-                    continue
-        print(f"Resuming: {len(processed_urls)} articles already processed. Skipping them.")
+def scrape_source1():
+    # --- MAIN EXECUTION ---
+    if __name__ == "__main__":
+        # 1. Collect all links
+        print("Starting metadata collection...")
+        article_list = get_all_article_metadata()
+        # print(article_list)
+        print(f"Found {len(article_list)} unique articles.\n")
+        
+        # 2. Check what have been already scraped
+        processed_urls = set()
+        if os.path.exists(OUTPUT_FILE):
+            with open(OUTPUT_FILE, 'r', encoding='utf-8') as f:
+                for line in f:
+                    try:
+                        existing_article = json.loads(line)
+                        processed_urls.add(existing_article['url'])
+                    except json.JSONDecodeError:
+                        continue
+            print(f"Resuming: {len(processed_urls)} articles already processed. Skipping them.")
 
-    # 3. Scrape full content for each link
-    print("Starting full-text extraction (this will take a while)...")
-    
-    try:
-        with open(OUTPUT_FILE, 'a', encoding='utf-8') as f:
-            for index, article in enumerate(article_list):
-                url = article['url']
+        # 3. Scrape full content for each link
+        print("Starting full-text extraction (this will take a while)...")
+        
+        try:
+            with open(OUTPUT_FILE, 'a', encoding='utf-8') as f:
+                for index, article in enumerate(article_list):
+                    url = article['url']
+                    
+                    # --- THE SKIP LOGIC ---
+                    if url in processed_urls:
+                        continue
+                    
+                    print(f"[{index+1}/{len(article_list)}] Scraping: {article['title']}")
+                    
+                    article['full_text'] = scrape_full_text(article['url'])
+                    
+                    # Write this specific article to a new line in the file
+                    json_record = json.dumps(article, ensure_ascii=False)
+                    f.write(json_record + "\n")
+                    
+                    # Flush ensures the data is written to disk immediately
+                    f.flush()
+                    
+                    # Crucial: Sleep to avoid being blocked
+                    time.sleep(1.5)
+                    
+            print(f"\nSuccess! Data saved to {OUTPUT_FILE}")     
+        except IOError as e:
+            print(f"Error writing to file: {e}")  
                 
-                # --- THE SKIP LOGIC ---
-                if url in processed_urls:
-                    continue
-                
-                print(f"[{index+1}/{len(article_list)}] Scraping: {article['title']}")
-                
-                article['full_text'] = scrape_full_text(article['url'])
-                
-                # Write this specific article to a new line in the file
-                json_record = json.dumps(article, ensure_ascii=False)
-                f.write(json_record + "\n")
-                
-                # Flush ensures the data is written to disk immediately
-                f.flush()
-                
-                # Crucial: Sleep to avoid being blocked
-                time.sleep(1.5)
-                
-        print(f"\nSuccess! Data saved to {OUTPUT_FILE}")     
-    except IOError as e:
-        print(f"Error writing to file: {e}")  
-            
 
-    # # 3. Save to JSON
-    # output_filename = 'source1_data.json'
-    # with open(output_filename, 'w', encoding='utf-8') as f:
-    #     # ensure_ascii=False keeps Japanese characters readable
-    #     # indent=4 makes the file human-readable
-    #     json.dump(article_list, f, ensure_ascii=False, indent=4)
+        # # 3. Save to JSON
+        # output_filename = 'source1_data.json'
+        # with open(output_filename, 'w', encoding='utf-8') as f:
+        #     # ensure_ascii=False keeps Japanese characters readable
+        #     # indent=4 makes the file human-readable
+        #     json.dump(article_list, f, ensure_ascii=False, indent=4)
 
-    # print(f"\nSuccess! Data saved to {output_filename}") 
-    
-    # # 3. Save to CSV
-    # keys = article_list[0].keys()
-    # with open('source1_data.csv', 'w', newline='', encoding='utf-8-sig') as f:
-    #     dict_writer = csv.DictWriter(f, fieldnames=keys)
-    #     dict_writer.writeheader()
-    #     dict_writer.writerows(article_list)
+        # print(f"\nSuccess! Data saved to {output_filename}") 
+        
+        # # 3. Save to CSV
+        # keys = article_list[0].keys()
+        # with open('source1_data.csv', 'w', newline='', encoding='utf-8-sig') as f:
+        #     dict_writer = csv.DictWriter(f, fieldnames=keys)
+        #     dict_writer.writeheader()
+        #     dict_writer.writerows(article_list)
 
-    # print("\nSuccess! Data saved to source1_data.csv")
+        # print("\nSuccess! Data saved to source1_data.csv")
+        
+scrape_source1()
