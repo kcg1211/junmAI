@@ -2,6 +2,9 @@ import json
 import uuid
 import chromadb
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from tqdm import tqdm
+import logging
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 
 import sys
 from pathlib import Path
@@ -19,6 +22,15 @@ CHROMA_PATH = settings.CHROMA_PATH
 COLLECTION_NAME = settings.COLLECTION_NAME
 
 DATA_DIR = BACKEND_DIR / "data" / "processed"
+LOG_DIR = BACKEND_DIR / "data" / "logs"
+LOG_PATH = LOG_DIR / "ingestion_errors.log"
+
+logging.basicConfig(
+    level=logging.ERROR,
+    filename=str(LOG_PATH),
+    filemode='a',               # 'a' for append (don't delete old logs), 'w' to overwrite
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 def load_jsonl(file_path):
     """Loads a .jsonl file and returns a list of dictionaries."""
@@ -84,9 +96,49 @@ def chunk_text(standardized_list):
             })
     return chunks
 
+# "If ingestion fails, wait exponentially (2s, 4s, 8s...) and try up to 3 times."
+@retry(
+    stop=stop_after_attempt(3), 
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    reraise=True # Let the loop handle the final failure after 3 attempts
+)
+def add_batch_to_chroma(collection, batch):
+    collection.add(
+        documents=[c['content'] for c in batch],
+        metadatas=[c['metadata'] for c in batch],
+        ids=[str(uuid.uuid4()) for _ in batch]
+    )
+
+def main_ingestion(collection, final_chunks, batch_size=100):
+    print(f"Ingesting {len(final_chunks)} chunks...")
+    
+    # data entries are processed in batch, reducing ingestion time
+    for i in tqdm(range(0, len(final_chunks), batch_size), desc="Ingesting"):
+        batch = final_chunks[i : i + batch_size]
+        
+        try:
+            add_batch_to_chroma(collection, batch)
+        except Exception as e:
+            # Failed all 3 retry attempts
+            tqdm.write(f"Failure: Batch starting at {i} skipped after 3 retries.")
+            logging.error(f"Batch {i} failed completely: {e}")
+            continue
+
+    print("Ingestion complete.")
+
+
 def main():
     # 1. Initialize ChromaDB [cite: 7]
     client = chromadb.PersistentClient(path=CHROMA_PATH) # creating chromadb
+
+    # Delete the old collection if it exists to prevent duplicates
+    # TODO: Update logic so the table doesn't have to be deleted on every db update (assign fixed ID instead of uuid to contents , and use .upsert() function)
+    try:
+        client.delete_collection(name="sake_knowledge_base")
+        print("Existing collection deleted.")
+    except Exception:
+        print("No existing collection to delete.")
+
     collection = client.get_or_create_collection(name="sake_knowledge_base")
 
     # 2. Load Raw Data
@@ -122,15 +174,18 @@ def main():
         print(f"Content Sample: {chunk['content'][:150]}...")
 
     # 5. Embed & Store [cite: 7]
-    print(f"Ingesting {len(final_chunks)} chunks into ChromaDB...")
-    for chunk in final_chunks:
-        collection.add(
-            documents=[chunk['content']],
-            metadatas=[chunk['metadata']],
-            ids=[str(uuid.uuid4())]
-        )
+
+    main_ingestion(collection, final_chunks)
+
+    # print(f"Ingesting {len(final_chunks)} chunks into ChromaDB...")
+    # for chunk in final_chunks:
+    #     collection.add(
+    #         documents=[chunk['content']],
+    #         metadatas=[chunk['metadata']],
+    #         ids=[str(uuid.uuid4())]
+    #     )
     
-    print("Ingestion complete!")
+    # print("Ingestion complete!")
 
 if __name__ == "__main__":
     print(f"Backend Directory: {BACKEND_DIR}")

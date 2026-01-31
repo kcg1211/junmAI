@@ -12,13 +12,14 @@ sake-ai-chatbot/
 │   │   ├── models/         # Pydantic schemas for API requests/responses
 │   │   └── core/           # Config, environment variables, and security
 │   ├── requirements.txt
-│   └── .env                # API Keys (OpenAI, Database URLs)
-├── data/
-│   ├── raw/                # Original Excel files (sake_list.xlsx)
-│   └── processed/          # Cleaned JSON or locally cached data
-├── scripts/                # Development & Data Maintenance scripts
-│   ├── scraper.py          # Script to crawl sake websites
-│   └── ingest_data.py      # Script to embed data and upload to Vector DB
+│   ├── .env                # API Keys (OpenAI, Database URLs)
+│   ├── data/
+│   │   ├── raw/                # Original Excel files (sake_list.xlsx)
+│   │   └── processed/          # Cleaned JSON or locally cached data
+│   ├── scripts/                # Development & Data Maintenance scripts
+│   │   ├── scraper.py          # Script to crawl sake websites
+│   │   └── ingest_data.py      # Script to embed data and upload to Vector DB
+│   ├── chroma_db/
 ├── frontend/               # UI (React, Vue, or Streamlit)
 │   ├── public/
 │   ├── src/
