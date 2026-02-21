@@ -8,9 +8,6 @@ import json
 
 load_dotenv()
 
-
-# TODO: output file location change to backend/data/processed
-
 # --- CONFIGURATION ---
 SOURCE_BASE_API_URL = os.getenv('WS_SOURCE1_BASE_API_URL')
 SOURCE_URL = os.getenv('WS_SOURCE1_URL')

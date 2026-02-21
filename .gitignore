@@ -17,6 +17,8 @@ env/
 # Project Specific Data
 # These appear to be local data files or sources
 data/
+commands.txt
+fileStructure.md
 
 # Tooling / Locks
 # Note: Usually you WANT to commit uv.lock if you are using 'uv',

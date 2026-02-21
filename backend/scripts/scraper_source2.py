@@ -6,8 +6,6 @@ import json
 
 load_dotenv()
 
-# TODO: output file location change to backend/data/processed
-
 SOURCE_URL = os.getenv('WS_SOURCE2_URL')
 OUTPUT_DIR = './data/processed'
 OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'source2_data.jsonl')

@@ -14,8 +14,6 @@ sys.path.append(BACKEND_DIR)
 
 from app.core.config import settings
 
-#TODO: progress bar for ingestion (tqdm)
-
 # --- Configuration ---
 # Instead of hardcoded "./backend/chroma_db"
 CHROMA_PATH = settings.CHROMA_PATH 
@@ -128,6 +126,9 @@ def main_ingestion(collection, final_chunks, batch_size=100):
 
 
 def main():
+
+    #TODO: add collection name into config.settings
+    
     # 1. Initialize ChromaDB [cite: 7]
     client = chromadb.PersistentClient(path=CHROMA_PATH) # creating chromadb
 

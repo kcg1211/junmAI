@@ -8,6 +8,8 @@ def test_query(search_term):
     # 1. Connect to the existing DB
     client = chromadb.PersistentClient(path=CHROMA_PATH)
     
+    #TODO: add collection name into config.settings
+    
     # 2. Get the collection
     collection = client.get_collection(name="sake_knowledge_base")
     
