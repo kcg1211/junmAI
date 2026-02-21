@@ -28,6 +28,7 @@ JunmAI is built using a modern Python-based FastAPI backend and a decoupled fron
 
 ## Project Structure
 
+```
 junmAI/
 ├── backend/                # FastAPI Server
 │   ├── app/
@@ -40,15 +41,16 @@ junmAI/
 ├── scripts/                # Scraper and Data Ingestion tools
 ├── chroma_db/              # Local Vector Database storage
 └── frontend/               # UI (React/Vue/Streamlit)
+```
 
 ## Roadmap
 
-| Phase | Focus | Key Deliverables | ✅
-|---|---|---|
-| 1. Data | Grounding Truth | Web scraping, sake list Excel processing, ChromaDB ingestion. | 📍
-| 2. LLM | Intelligence | OpenAI/Gemini RAG integration and "context-only" prompt engineering. |
-| 3. API | Logic & Routing | FastAPI endpoints for functionalities. |
-| 4. Interface | User Experience | Mobile-based UI to facilitate interactive sake consultations. |
+| Phase | Focus | Key Deliverables |
+| :--- | :--- | :--- |
+| **1. Data** | Grounding Truth | Web scraping, sake list Excel processing, ChromaDB ingestion. **(currently here)** |
+| **2. LLM** | Intelligence | OpenAI/Gemini RAG integration and "context-only" prompt engineering. |
+| **3. API** | Logic & Routing | FastAPI endpoints for functionalities. |
+| **4. Interface** | User Experience | Mobile-based UI to facilitate interactive sake consultations. |
 
 
 
