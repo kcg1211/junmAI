@@ -28,6 +28,7 @@ fileStructure.md
 # Environment variables / Secrets
 .env
 .env.local
+secrets/
 
 # IDEs and Editors
 .vscode/
