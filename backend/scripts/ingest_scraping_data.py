@@ -17,7 +17,7 @@ from app.core.config import settings
 # --- Configuration ---
 # Instead of hardcoded "./backend/chroma_db"
 CHROMA_PATH = settings.CHROMA_PATH 
-COLLECTION_NAME = settings.COLLECTION_NAME
+COLLECTION_NAME = settings.KNOWLEDGE_COLLECTION_NAME
 
 DATA_DIR = BACKEND_DIR / "data" / "processed"
 LOG_DIR = BACKEND_DIR / "data" / "logs"
@@ -126,8 +126,6 @@ def main_ingestion(collection, final_chunks, batch_size=100):
 
 
 def main():
-
-    #TODO: add collection name into config.settings
     
     # 1. Initialize ChromaDB [cite: 7]
     client = chromadb.PersistentClient(path=CHROMA_PATH) # creating chromadb
@@ -135,12 +133,12 @@ def main():
     # Delete the old collection if it exists to prevent duplicates
     # TODO: Update logic so the table doesn't have to be deleted on every db update (assign fixed ID instead of uuid to contents , and use .upsert() function)
     try:
-        client.delete_collection(name="sake_knowledge_base")
+        client.delete_collection(name=COLLECTION_NAME)
         print("Existing collection deleted.")
     except Exception:
         print("No existing collection to delete.")
 
-    collection = client.get_or_create_collection(name="sake_knowledge_base")
+    collection = client.get_or_create_collection(name=COLLECTION_NAME)
 
     # 2. Load Raw Data
     print("Loading data sources...")

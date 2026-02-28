@@ -9,7 +9,7 @@ BACKEND_DIR = APP_DIR.parent
 class Settings(BaseSettings):
     
     CHROMA_PATH: str = str(BACKEND_DIR / "chroma_db")
-    COLLECTION_NAME: str = "sake_knowledge_base"
+    KNOWLEDGE_COLLECTION_NAME: str = "sake_knowledge_base"
 
     # We'll leave placeholders for your future secrets
     # OPENAI_API_KEY: str = "" 

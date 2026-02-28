@@ -3,6 +3,7 @@ from app.core.config import settings
 
 # Use the same path as your ingest_data.py
 CHROMA_PATH = settings.CHROMA_PATH 
+COLLECTION_NAME = settings.KNOWLEDGE_COLLECTION_NAME
 
 def test_query(search_term):
     # 1. Connect to the existing DB
@@ -11,7 +12,7 @@ def test_query(search_term):
     #TODO: add collection name into config.settings
     
     # 2. Get the collection
-    collection = client.get_collection(name="sake_knowledge_base")
+    collection = client.get_collection(name=COLLECTION_NAME)
     
     # 3. Perform a search
     # This will return the 2 most relevant chunks
@@ -33,7 +34,7 @@ def test_query(search_term):
 if __name__ == "__main__":
     # Check if the total count matches your expectations
     client = chromadb.PersistentClient(path=CHROMA_PATH)
-    col = client.get_collection(name="sake_knowledge_base")
+    col = client.get_collection(name=COLLECTION_NAME)
     print(f"Total chunks in database: {col.count()}")
     
     # Try searching for something specific from your data
