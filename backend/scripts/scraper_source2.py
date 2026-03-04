@@ -8,7 +8,7 @@ load_dotenv()
 
 SOURCE_URL = os.getenv('WS_SOURCE2_URL')
 OUTPUT_DIR = './data/processed'
-OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'source2_data.jsonl')
+OUTPUT_FILE = os.path.join(OUTPUT_DIR, 'source2_data.json')
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
 }

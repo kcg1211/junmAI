@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     
     CHROMA_PATH: str = str(BACKEND_DIR / "chroma_db")
     KNOWLEDGE_COLLECTION_NAME: str = "sake_knowledge_base"
+    SUGGESTION_COLLECTION_NAME: str = "sake_suggestion_base"
 
     # We'll leave placeholders for your future secrets
     # OPENAI_API_KEY: str = "" 
