@@ -28,8 +28,15 @@ async def run_local_test():
     # 4. Define test scenarios to exercise the Routing Brain
     test_queries = [
         # "What is best season for sake?", 
-        "I want a sake that can be served cold" 
+        # "I want a sake that have a polishing ration larger than 60%" 
         # "Recommend a full-bodied sake and explain what makes a sake full-bodied"
+        # "Ippin Junmai Daiginjo"
+        # "A sake from Fukui with 50% polish ratio"
+        # "Yamadanishiki"
+        # "A medium sweet sake that pairs well with seafood"
+        # "Warm sake that pairs with miso"
+        # "Warm sake that pairs with seafood"
+        "What makes a sake suitable for warming"
     ]
 
     print(f"\n{'#'*60}")

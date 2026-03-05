@@ -29,11 +29,12 @@ class SakeRagService:
           "suggestion_query": "Optimized keywords for bottle flavour/aroma (e.g., 'melon, crisp, fruity')",
           "knowledge_query": "Optimized keywords for general and technical definitions (e.g., 'polishing ratio explanation')",
           "filters": {
+            "name": "String or null",
             "prefecture": "String or null",
             "polishing_ratio": "String or null",
             "rice_type": "String or null",
-            "style": "String or null",
-            "serving_temp": "String or null"
+            "style": "sweet" | "medium sweet" | "medium dry" | "dry"
+            "serving_temp": "cold" | "cold, ambient" | "cold, ambient, warm" | "ambient, warm"
           }
         }
 
@@ -48,6 +49,7 @@ class SakeRagService:
         - Technical Translation: For 'knowledge_query', translate 'civilian' questions into industry standards. For example, transform 'why is rice ground?' into 'seimai-buai purpose, starch concentration, lipids removal'.
         - Hard Spec Normalization: Extract 'prefecture' and 'rice_type' exactly. For example, if a user says 'around 50%', set 'polishing_ratio' to '50%' (String). Map city names like 'Kobe' to their Prefecture (e.g., 'Hyogo').
         - Semantic/Deterministic Separation: If the user only provides Hard Specs (like '50% polishing'), use a general term like 'sake' in the suggestion_query so the vector search has a baseline, while keeping the Hard Spec in filters. For example, if a user asks for 'Gifu sake', put 'Gifu' in the filters and keep it OUT of the 'suggestion_query' to prevent vector noise.
+        - Temperature Mapping: If user mentions something like "hot", "warm", "atsukan", "kanshu" -> "cold, ambient, warm" or "ambient, warm".
         
         Few-Shot Examples:
 
@@ -57,6 +59,7 @@ class SakeRagService:
         "suggestion_query": "fruity, apple, melon, floral, strawberry",
         "knowledge_query": "seimai-buai definition, rice polishing ratio meaning, sake brewing standards",
         "filters": {
+            "name": null,
             "prefecture": "Gifu",
             "polishing_ratio": null,
             "rice_type": null,
@@ -71,6 +74,7 @@ class SakeRagService:
         "suggestion_query": "crisp, clean finish, dry, salmon pairing, seafood match",
         "knowledge_query": null,
         "filters": {
+            "name": null,
             "prefecture": null,
             "polishing_ratio": "50%",
             "rice_type": null,
