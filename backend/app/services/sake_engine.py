@@ -19,7 +19,7 @@ class SakeEngine:
         
         # 1. Process Sake Suggestion
         if suggestion_results and len(suggestion_results['documents'][0]) > 0:
-            print(suggestion_results)
+            # print(suggestion_results)
             context_parts.append("### SAKE SUGGESTIONS:")
             # ChromaDB returns a list of lists; we iterate through the first index
             for doc, meta in zip(suggestion_results['documents'][0], suggestion_results['metadatas'][0]):
@@ -34,6 +34,6 @@ class SakeEngine:
                 
         # Return a single cohesive string or a fallback message
         if not context_parts:
-            return "No specific sake or knowledge found for this query."
+            return "No result found for this query."
             
         return "\n".join(context_parts)

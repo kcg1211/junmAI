@@ -2,6 +2,7 @@ import asyncio
 import json
 import chromadb
 from app.services.rag_service import SakeRagService
+from app.services.llm_service import SakeLlmService
 from app.core.config import settings
 
 CHROMA_PATH = settings.CHROMA_PATH 
@@ -12,6 +13,7 @@ async def run_local_test():
     # 1. Initialize the actual ChromaDB Client
     # Adjust host/port if you aren't using the default settings
     chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
+    llm_service = SakeLlmService()
     
     # 2. Ensure collections exist so the service doesn't crash on init
     # These names come from your settings.KNOWLEDGE_COLLECTION_NAME, etc.
@@ -35,9 +37,11 @@ async def run_local_test():
         # "Yamadanishiki"
         # "A medium sweet sake that pairs well with seafood"
         # "Warm sake that pairs with miso"
-        # "Warm sake that pairs with seafood"
+        "Warm sake that pairs with seafood"
         # "What makes a sake suitable for warming"
-        "A sake that pairs well with seafood"
+        # "A sake that pairs well with seafood"
+        # "A fruity sake from Hokkaido"
+        # "What is Google"
     ]
 
     print(f"\n{'#'*60}")
@@ -59,10 +63,20 @@ async def run_local_test():
             print("\n--- 📚 PHASE 2: LOCAL DB RETRIEVAL ---")
             context = await service.get_hybrid_context(query)
             
-            print("FINAL CONTEXT FOR LLM:")
+            print(" CONTEXT FOR LLM:")
             print("-" * 30)
             print(context)
             print("-" * 30)
+
+            print("\n--- 📚 PHASE 3: LLM SYNTHESIS ---")
+            final_response = await llm_service.generate_final_response(query, context)
+
+            print("FINAL RESPONSE FROM LLM:")
+            print("-" * 30)
+            print(final_response)
+            print("-" * 30)
+
+
 
         except Exception as e:
             print(f"❌ Error processing query: {e}")

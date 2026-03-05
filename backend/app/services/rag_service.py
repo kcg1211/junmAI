@@ -14,10 +14,10 @@ class SakeRagService:
         self.suggestion_collection = self.db.get_collection(SAKE_SUGGESTION)
         self.engine = SakeEngine()
         self.client = genai.Client(api_key=settings.GEMINI_API_KEY)
-        self.model_id = "gemini-2.5-flash"
+        self.model_id = "gemini-3.1-flash-lite-preview"
 
     def generate_search_plan(self, user_query: str):
-        """Uses Gemini 2.5 Flash to decompose the query into optimized search instructions."""
+        """Uses Gemini 3.1 Flash to decompose the query into optimized search instructions."""
         
         system_prompt = """
         You are the Routing Brain for JunmAI, a Sake Sommelier assistant. 
@@ -25,7 +25,7 @@ class SakeRagService:
         
         JSON Schema:
         {
-          "path": "general" | "suggestion" | "complex",
+          "path": "general" | "suggestion" | "complex" | "out_of_scope",
           "suggestion_query": "Optimized keywords for bottle flavour/aroma (e.g., 'melon, crisp, fruity')",
           "knowledge_query": "Optimized keywords for general and technical definitions (e.g., 'polishing ratio explanation')",
           "filters": {
@@ -39,6 +39,7 @@ class SakeRagService:
         }
 
         Rules:
+        - If the query is NOT about sake, alcohol brewing, Japanese food pairings, or sake culture, path is 'out_of_scope'. For example: 'What is the weather?', 'Who is the president?', or 'How to fix a car?' are 'out_of_scope'.
         - If the user asks for bottle picks, recommendations or food match, path is 'suggestion'.
         - If they ask for an explanation or definition of a term or concept about brewing, path is 'general'.
         - If they ask for both, path is 'complex'. 
@@ -98,6 +99,9 @@ class SakeRagService:
     async def get_hybrid_context(self, user_query: str):
         # 1. Get the dynamic plan from Gemini
         plan = self.generate_search_plan(user_query)
+
+        if plan.get('path') == 'out_of_scope':
+            return "Not a sake-related query"
         
         suggestion_results = []
         knowledge_results = []
