@@ -36,7 +36,8 @@ async def run_local_test():
         # "A medium sweet sake that pairs well with seafood"
         # "Warm sake that pairs with miso"
         # "Warm sake that pairs with seafood"
-        "What makes a sake suitable for warming"
+        # "What makes a sake suitable for warming"
+        "A sake that pairs well with seafood"
     ]
 
     print(f"\n{'#'*60}")
