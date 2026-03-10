@@ -40,8 +40,11 @@ junmAI/
 │   └── processed/          # Cleaned data for ingestion
 ├── scripts/                # Scraper and Data Ingestion tools
 ├── chroma_db/              # Local Vector Database storage
-└── frontend/               # UI (React/Vue/Streamlit)
+└── frontend/               # UI (React)
 ```
+
+## System Design
+![junmAI System Design Diagram](https://drive.google.com/file/d/12qEysJtKFx515CtNb9d4EvnZZfCbWFKF/view?usp=drive_link)
 
 ## Roadmap
 
