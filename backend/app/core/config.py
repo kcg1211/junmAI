@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
-# This keeps your DB path consistent across ingestion and the API
+# Keeps DB path consistent across ingestion and the API
 CURRENT_DIR = Path(__file__).resolve().parent
 APP_DIR = CURRENT_DIR.parent
 BACKEND_DIR = APP_DIR.parent

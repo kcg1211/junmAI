@@ -1,11 +1,11 @@
 JunmAI: Your virtual Sake Sommelier
 
-JunmAI is an advanced AI-powered chatbot designed to bridge the gap between traditional Japanese sake expertise and modern digital accessibility. By combining professional sommelier knowledge with Retrieval-Augmented Generation (RAG), JunmAI provides accurate, data-driven sake recommendations and information.
+JunmAI is an AI-powered chatbot designed to bridge the gap between traditional Japanese sake expertise and modern digital accessibility. By combining professional sommelier knowledge with Retrieval-Augmented Generation (RAG), JunmAI provides accurate, data-driven sake recommendations and information.
 
 ## Project Overview
 Selecting the perfect sake can be intimidating, whether you are a novice or a seasoned enthusiast. JunmAI simplifies this process through two core functions:
 
-- Sake Knowledge Base: Users can ask any question regarding sake—from brewing methods to regional styles—and receive answers grounded in verified, scraped content from authoritative sake websites.
+- Sake Knowledge Base: Users can ask any question regarding sake. From brewing methods to regional styles, and receive answers grounded in verified, scraped content from authoritative sake websites.
 
 - Intelligent Recommendations: Whether a user has a "vague preference" or needs a "serious match" for a specific dish, the bot analyses a curated database of sake profiles (including polishing ratios, palate, and aroma) to suggest the ideal bottle.
 
@@ -18,13 +18,12 @@ JunmAI is built using a modern Python-based FastAPI backend and a decoupled fron
 
 - Frontend: Mobile-First React Interface optimised for mobile browsers, providing diners with a fast, responsive interface to navigate complex sake lists directly from their restaurant table.
 
-- Intelligence: LLM integration for natural language understanding and paraphrasing.
+- Intelligence: LLM integration for natural language understanding, context generation, and generative response.
 
-- Vector Database: ChromaDB for storing and retrieving embedded web content.
+- Vector Database: ChromaDB for storing and retrieving embedded web content and spreadsheet.
 
 - Web Scraping: BeautifulSoup for converting HTML from authoritative sources into clean, processable text.
 
-- Data Management: Excel-based raw data processing for high-fidelity sake specifications.
 
 ## Project Structure
 
@@ -32,11 +31,9 @@ JunmAI is built using a modern Python-based FastAPI backend and a decoupled fron
 junmAI/
 ├── backend/                # FastAPI Server
 │   ├── app/
-│   │   ├── api/            # API Route definitions (/ask, /suggest)
-│   │   ├── services/       # Core Logic (LLM, RAG, and Sake Engine)
-│   │   └── models/         # Pydantic schemas
+│   │   ├── core/           # Pydantic validation settings
+│   │   └── services/       # Core Logic (LLM, RAG, and Sake Engine)
 ├── data/
-│   ├── raw/                # Original sake_list.xlsx
 │   └── processed/          # Cleaned data for ingestion
 ├── scripts/                # Scraper and Data Ingestion tools
 ├── chroma_db/              # Local Vector Database storage
