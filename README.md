@@ -33,10 +33,10 @@ junmAI/
 │   ├── app/
 │   │   ├── core/           # Pydantic validation settings
 │   │   └── services/       # Core Logic (LLM, RAG, and Sake Engine)
-├── data/
-│   └── processed/          # Cleaned data for ingestion
-├── scripts/                # Scraper and Data Ingestion tools
-├── chroma_db/              # Local Vector Database storage
+│   ├── data/
+│   │   └── processed/      # Cleaned data for ingestion
+│   ├── scripts/            # Scraper and Data Ingestion tools
+│   └── chroma_db/          # Local Vector Database storage
 └── frontend/               # UI (React)
 ```
 
