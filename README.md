@@ -44,7 +44,7 @@ junmAI/
 ```
 
 ## System Design
-![junmAI System Design Diagram](https://drive.google.com/file/d/12qEysJtKFx515CtNb9d4EvnZZfCbWFKF/view?usp=drive_link)
+![junmAI System Design Diagram](https://drive.google.com/uc?export=view&id=12qEysJtKFx515CtNb9d4EvnZZfCbWFKF)
 
 ## Roadmap
 
